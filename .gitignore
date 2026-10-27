@@ -5,8 +5,7 @@
 *.iml
 local.properties
 build/
-app/build/
-app/build2/
+app/build*/
 captures/
 dist/
 tools/flow/
