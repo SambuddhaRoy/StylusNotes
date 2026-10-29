@@ -126,6 +126,9 @@ fun popover(anchor: View, content: View, below: Boolean = true): PopupWindow {
     y = y.coerceIn(0, max(0, root.height - box.measuredHeight))
     card.pivotX = (loc[0] + anchor.width / 2 - x - m).toFloat()
     card.pivotY = if (below) 0f else box.measuredHeight.toFloat()
+    // explicit size: a WRAP_CONTENT popup is first laid out at a narrow "dialog width" on big screens,
+    // which squashed views that need their full size (the colour wheel)
+    pw.width = box.measuredWidth; pw.height = minOf(box.measuredHeight, root.height)
     pw.showAtLocation(root, Gravity.TOP or Gravity.START, x, y)
     card.popIn()
     anchor.hTick()

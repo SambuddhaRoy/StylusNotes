@@ -110,10 +110,13 @@ fun colorPanel(c: Context, prefs: SharedPreferences, current: Int, pick: (Int) -
         }, LinearLayout.LayoutParams(c.dpi(40), c.dpi(40)).apply { setMargins(c.dpi(2), c.dpi(2), c.dpi(2), c.dpi(2)) })
     }
     wheel.onColor = { k -> hex.text = "#%06X".format(k and 0xFFFFFF); pick(k) }
-    panel.addView(wheel)
+    // WRAP_CONTENT, not the default MATCH_PARENT: a wrap-content LinearLayout ignores match-parent children
+    // when sizing itself, which shrank the panel to the width of the hex label
+    val wrap = { LinearLayout.LayoutParams(-2, -2) }
+    panel.addView(wheel, wrap())
     panel.addView(hex, LinearLayout.LayoutParams(-2, -2).apply { topMargin = c.dpi(8); bottomMargin = c.dpi(8) })
     val recent = Recent.get(prefs)
-    if (recent.isNotEmpty()) panel.addView(row(recent.take(6)))
-    panel.addView(row(PALETTE.take(6))); panel.addView(row(PALETTE.drop(6)))
+    if (recent.isNotEmpty()) panel.addView(row(recent.take(6)), wrap())
+    panel.addView(row(PALETTE.take(6)), wrap()); panel.addView(row(PALETTE.drop(6)), wrap())
     return panel
 }

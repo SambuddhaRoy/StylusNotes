@@ -111,6 +111,12 @@ class DrawActivity : EditorBase() {
         applyInsets(root, listOf(findViewById(R.id.top)), listOf(ctx, findViewById(R.id.debug)))
         attachDebug(pv.router, findViewById(R.id.debug))
         setColor(prefs.getInt("drawColor", pv.color))
+        // each tool's last brush, size and opacity, in every drawing
+        for (k in 0..2) {
+            pv.brush[k] = prefs.getInt("drawBrush$k", pv.brush[k]).coerceIn(0, Brushes.all.lastIndex)
+            pv.sizes[k] = prefs.getFloat("drawSize$k", pv.sizes[k]).coerceIn(0f, 1f)
+            pv.opac[k] = prefs.getFloat("drawOpac$k", pv.opac[k]).coerceIn(0f, 1f)
+        }
         selectTool(PaintView.PAINT)
         history()
         findViewById<View>(R.id.side).apply { translationX = -dp(96f); post { springX(0f) } }
@@ -542,6 +548,9 @@ class DrawActivity : EditorBase() {
     }
 
     override fun save() {
+        if (::pv.isInitialized) prefs.edit().apply {
+            for (k in 0..2) { putInt("drawBrush$k", pv.brush[k]); putFloat("drawSize$k", pv.sizes[k]); putFloat("drawOpac$k", pv.opac[k]) }
+        }.apply()
         if (!dirty || !::art.isInitialized) return
         dirty = false
         ArtIO.save(this, art)

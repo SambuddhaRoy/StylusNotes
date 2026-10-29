@@ -89,6 +89,11 @@ class NoteActivity : EditorBase() {
         ink.onSnap = { ink.hSnap() }
         statusBarIcons()
         applySettings()
+        // the pen you used last, in every note
+        brush = prefs.getInt("noteBrush", Stroke.PEN); ink.tool = brush
+        ink.color = prefs.getInt("noteColor", ink.color)
+        ink.size = prefs.getFloat("noteSize", ink.size).coerceIn(1f, 32f)
+        findViewById<Slider>(R.id.size).value = ink.size
 
         findViewById<View>(R.id.back).setOnClickListener { finishAfterTransition() }
         titleTv.setOnClickListener { rename() }
@@ -444,6 +449,8 @@ class NoteActivity : EditorBase() {
     }
 
     override fun save() {
+        if (::ink.isInitialized)
+            prefs.edit().putInt("noteBrush", brush).putInt("noteColor", ink.color).putFloat("noteSize", ink.size).apply()
         if (!dirty || !::note.isInitialized) return
         dirty = false
         NoteIO.save(this, note)

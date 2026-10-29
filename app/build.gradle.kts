@@ -15,8 +15,8 @@ android {
         minSdk = 26
         targetSdk = 34
         // tools/release.py bumps these; -PvName/-PvCode override them for one-off builds
-        versionCode = (project.findProperty("vCode") as String?)?.toInt() ?: 30100
-        versionName = project.findProperty("vName") as String? ?: "3.1.0"
+        versionCode = (project.findProperty("vCode") as String?)?.toInt() ?: 30101
+        versionName = project.findProperty("vName") as String? ?: "3.1.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         androidResources { localeFilters += "en" }
     }
